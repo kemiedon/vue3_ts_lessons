@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>聲明式渲染範例</title>
+  
+</head>
+<body>
+  <div id="app">
+    <ul>
+      <li v-for="item in items">{{ item }}</li>
+    </ul>
+  </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typescript@5.6.3/lib/typescript.js"></script>
+<script type="text/typescript">
+    interface AppData {
+        items: string[];
+    }
+
+    const app = Vue.createApp({
+        data(): AppData {
+            return {
+                items: ['蘋果', '橘子', '檸檬']
+            }
+        }
+    })
+    app.mount('#app')
+</script>
+<script>
+    // TypeScript compilation
+    var script = document.querySelector('script[type="text/typescript"]');
+    if (script) {
+        var compiledJs = ts.transpile(script.innerHTML);
+        eval(compiledJs);
+    }
+</script>
+</body>
+</html>

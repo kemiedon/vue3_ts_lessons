@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue 3 with TypeScript in HTML</title>
+</head>
+<body>
+  <div id="app">
+    <h1>{{ message }}</h1>
+  </div>
+
+  <!-- 引入 Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- 引入 TypeScript CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/typescript@5.6.3/lib/typescript.js"></script>
+
+  <script type="text/typescript">
+    const { createApp, ref } = Vue;
+
+    // 定義 TypeScript 介面
+    interface AppData {
+      message: string;
+    }
+
+    // 創建 Vue 應用
+    const app = createApp({
+      setup(): AppData {
+        const message = ref('Hello, Vue 3 with TypeScript!');
+        
+        return {
+          message,
+        };
+      }
+    });
+
+    // 掛載應用
+    app.mount('#app');
+  </script>
+
+  <!-- 將 TypeScript 編譯為 JavaScript -->
+<script>
+    // 獲取 TypeScript 程式碼
+    const tsScript = document.querySelector('script[type="text/typescript"]').textContent;
+    // 使用 TypeScript CDN 編譯
+    const compiled = ts.transpile(tsScript, {
+        target: ts.ScriptTarget.ESNext
+    });
+    // 執行編譯後的 JavaScript
+    eval(compiled);
+</script>
+</body>
+</html>
