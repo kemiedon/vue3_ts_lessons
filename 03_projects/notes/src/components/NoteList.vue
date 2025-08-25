@@ -8,61 +8,104 @@ const store = useNoteStore()
 const { notes } = storeToRefs(store)
 const router = useRouter()
 const deleteId = ref<number | null>(null)
+const showModal = ref(false)
 
 function handleDelete(id) {
     deleteId.value = id
-    document.getElementById('modal').classList.remove('hidden')
+    showModal.value = true
 }
 
 function confirmDelete() {
     if (deleteId.value !== null) {
         store.deleteNote(deleteId.value)
         deleteId.value = null
-        document.getElementById('modal').classList.add('hidden')
+        showModal.value = false
         router.push({ name: 'NoteGrid' })
     }
 }
 </script>
 
 <template>
-    
-  <ul class="list-group divide-y divide-gray-200 bg-white rounded">
-    <li v-for="note in notes" :key="note.id" class="flex items-center justify-between px-4 py-2 hover:bg-gray-50">
-      <i class="fa-solid fa-thumbtack text-gray-400 mr-3"></i>
-      <RouterLink :to="{ name: 'EditNote', params: { id: note.id } }" class="text-blue-500 hover:text-blue-700 mx-1">
-        <span class="flex-1 text-gray-800">{{ note.title }}</span>
-      </RouterLink>      
-      
-      <a @click="handleDelete(note.id)" class="btn text-red-500 hover:text-white mx-1">
-        <i class="fa-solid fa-trash"></i>
-      </a>
-    </li>
-  </ul>
-  <!-- Modal -->
-  <div id="modal" class="hidden fixed inset-0 flex items-center justify-center">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold text-gray-800">是否刪除</h2>
-        <button onclick="document.getElementById('modal').classList.add('hidden')" class="bg-transparent text-gray-800 px-4 py-2 rounded-lg transition">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-
-      </div>
-      <p class="text-gray-600 mb-6">確定刪除此筆記錄?</p>
-      <div class="flex justify-end">
-        <button onclick="document.getElementById('modal').classList.add('hidden')" class="bg-gray-300 text-gray-800 px-4 py-2 mr-2 rounded-lg hover:bg-gray-400 transition">
-          取消
-        </button>
-        <button @click="confirmDelete" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition">
-          確定
-        </button>
-      </div>
+    <div class="sidebar">
+        <h2>重要</h2>
+        <ul class="note-list">
+            <li v-for="note in store.pinnedNotes" :key="note.id" class="note-list-item">
+                <i class="fa-solid fa-thumbtack note-icon rotate"></i>
+                <RouterLink :to="{ name: 'EditNote', params: { id: note.id } }" class="note-link">
+                    <span class="note-title">{{ note.title }}</span>
+                </RouterLink>      
+                <a @click="handleDelete(note.id)" class="note-delete-btn">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </li>
+        </ul>
+        <hr>
+        <ul class="note-list">
+            <li v-for="note in store.unpinnedNotes" :key="note.id" class="note-list-item">
+                <i class="fa-solid fa-thumbtack note-icon"></i>
+                <RouterLink :to="{ name: 'EditNote', params: { id: note.id } }" class="note-link">
+                    <span class="note-title">{{ note.title }}</span>
+                </RouterLink>      
+                <a @click="handleDelete(note.id)" class="note-delete-btn">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </li>
+        </ul>
     </div>
-  </div>
+    <div id="modal" class="modal" :class="{ hidden: !showModal }">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">是否刪除</h2>
+                <button @click="showModal = false" class="modal-close-btn">
+                    <svg class="modal-close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="modal-message">確定刪除此筆記錄?</p>
+            <div class="modal-actions">
+                <button @click="showModal = false" class="modal-cancel-btn">
+                    取消
+                </button>
+                <button @click="confirmDelete" class="modal-confirm-btn">
+                    確定
+                </button>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <style scoped>
+.sidebar {
+  width: 250px;
+  color: rgb(36, 36, 36);
+  padding: 20px;
+}
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+.sidebar li {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+.sidebar li:hover {
+  background-color: #fcf9dc;
+}
+.note-icon{
+    color: black;
+}
+.rotate{
+    transform: rotate(45deg);
+}
 
 </style>

@@ -4,15 +4,15 @@ import ToolBar from './components/ToolBar.vue'
 </script>
 
 <template>
-  <div class="flex flex-col min-h-screen">
+  <div class="container">
     <!-- Navbar -->
     <ToolBar/>
     <!-- Main Content -->
-    <main class="flex-1 container mx-auto px-4 py-6 flex">
-      <div class="w-1/4 pr-4">
+    <main class="flex-container">
+      <div class="w-30">
         <NoteList />
       </div>
-      <div class="w-3/4">
+      <div class="w-70">
         <router-view />
       </div>
     </main>
@@ -25,4 +25,17 @@ import ToolBar from './components/ToolBar.vue'
 </template>
 
 <style scoped>
+.flex-container {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+.w-30{
+    width: 20%;
+}
+.w-70{
+    width: 80%;
+}
 </style>
